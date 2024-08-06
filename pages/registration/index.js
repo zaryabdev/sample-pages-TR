@@ -11,6 +11,7 @@ const REGISTARTION_STAGES = {
   SIGN_IN_SUCCESS: "SIGN_IN_SUCCESS",
   RECOVERY_PASSWORD: "SIGN_IN_PASSWORD",
   RECOVERY_MESSAGE: "RECOVERY_MESSAGE",
+  RECOVERY_SUCCESS: "RECOVERY_SUCCESS",
   SIGN_UP_NAME: "SIGN_UP_NAME",
   SIGN_UP_BASIC_INFO: "SIGN_UP_BASIC_INFO",
   SIGN_UP_EMAIL: "SIGN_UP_EMAIL",
@@ -23,13 +24,44 @@ export default function Registration() {
     REGISTARTION_STAGES.SIGN_IN_EMAIL
   );
 
+  function getTitle(key) {
+    let title = "";
+    switch (key) {
+      case REGISTARTION_STAGES.SIGN_IN_EMAIL:
+        title = "Sign in";
+        break;
+      case REGISTARTION_STAGES.SIGN_IN_PASSWORD:
+        title = "Welcome";
+        break;
+      case REGISTARTION_STAGES.SIGN_IN_SUCCESS:
+        title = "Dashboard";
+        break;
+      case REGISTARTION_STAGES.SIGN_UP_NAME:
+        title = "Create your account";
+        break;
+      case REGISTARTION_STAGES.SIGN_UP_BASIC_INFO:
+        title = "Basic Information";
+        break;
+      case REGISTARTION_STAGES.SIGN_UP_SUCCESS:
+        title = "Please wait...";
+        break;
+      default:
+        title = "...";
+        break;
+    }
+
+    return title;
+  }
+
   return (
     <MotionConfig transition={transition}>
       <div className="flex min-h-full flex-1 flex-col justify-center bg-zinc-900 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto my-12 sm:mx-auto sm:w-full sm:max-w-[480px]">
+        <div className="my-12 sm:mx-auto sm:w-full sm:max-w-[480px]">
           <div className="rounded-none border border-zinc-700 bg-zinc-800 sm:rounded-xl">
             <div className="px-8 pt-8">
-              <p className="text-lg text-white">Sign in</p>
+              <p className="text-lg text-white">
+                {getTitle(registrationStage)}
+              </p>
             </div>
 
             <ResizablePanel>
@@ -82,6 +114,11 @@ export default function Registration() {
                           className="mx-2 text-sm text-gray-500"
                           id="email-description"
                           type="button"
+                          onClick={() =>
+                            setRegistrationStage(
+                              REGISTARTION_STAGES.SIGN_UP_NAME
+                            )
+                          }
                         >
                           Create Account
                         </button>
@@ -102,7 +139,7 @@ export default function Registration() {
                       duration: transition.duration / 2,
                       delay: transition.duration / 2,
                     }}
-                    key="form"
+                    key={registrationStage}
                   >
                     <Form
                       onSubmit={async () => await delay(500)}
@@ -132,13 +169,6 @@ export default function Registration() {
                         </div>
                       </div>
                       <div className="mt-8 flex justify-end">
-                        <button
-                          className="mx-2 text-sm text-gray-500"
-                          id="email-description"
-                          type="button"
-                        >
-                          Create Account
-                        </button>
                         <Form.LoadingButton className="rounded bg-indigo-500 px-5 py-2 text-sm font-medium text-white ">
                           Next
                         </Form.LoadingButton>
@@ -147,7 +177,216 @@ export default function Registration() {
                   </motion.div>
                 )}
 
+                {registrationStage == REGISTARTION_STAGES.SIGN_UP_NAME && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{
+                      ...transition,
+                      duration: transition.duration / 2,
+                      delay: transition.duration / 2,
+                    }}
+                    key={registrationStage}
+                  >
+                    <Form
+                      onSubmit={async () => await delay(0)}
+                      skipDelay={true}
+                      afterSave={() => {
+                        setRegistrationStage(
+                          REGISTARTION_STAGES.SIGN_UP_BASIC_INFO
+                        );
+                      }}
+                      className="p-8"
+                    >
+                      <div>
+                        <label
+                          htmlFor="name"
+                          className="block text-sm font-medium leading-6 text-zinc-400"
+                        >
+                          First Name
+                        </label>
+                        <div className="mt-2">
+                          <input
+                            id="name"
+                            name="name"
+                            type="text"
+                            autoComplete="name"
+                            required
+                            defaultValue="Admin"
+                            className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="name"
+                          className="block text-sm font-medium leading-6 text-zinc-400"
+                        >
+                          Last Name{" "}
+                          <span className="opacity-75">(Optional)</span>
+                        </label>
+                        <div className="mt-2">
+                          <input
+                            id="last-name"
+                            name="last-name"
+                            type="text"
+                            autoComplete="name"
+                            className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-8 flex justify-end">
+                        <Form.LoadingButton className="rounded bg-indigo-500 px-5 py-2 text-sm font-medium text-white ">
+                          Next
+                        </Form.LoadingButton>
+                      </div>
+                    </Form>
+                  </motion.div>
+                )}
+
+                {registrationStage ==
+                  REGISTARTION_STAGES.SIGN_UP_BASIC_INFO && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{
+                      ...transition,
+                      duration: transition.duration / 2,
+                      delay: transition.duration / 2,
+                    }}
+                    key={registrationStage}
+                  >
+                    <Form
+                      onSubmit={async () => await delay(0)}
+                      skipDelay={true}
+                      afterSave={() => {
+                        setRegistrationStage(
+                          REGISTARTION_STAGES.SIGN_UP_SUCCESS
+                        );
+                      }}
+                      className="p-8"
+                    >
+                      <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-12">
+                        <div className="sm:col-span-4">
+                          <label
+                            htmlFor="email"
+                            className="block text-sm font-medium leading-6 text-zinc-400"
+                          >
+                            Month
+                          </label>
+                          <div className="mt-2">
+                            <select
+                              id="location"
+                              name="location"
+                              className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 [&_*]:text-black"
+                              defaultValue="Jan"
+                            >
+                              <option>Jan</option>
+                              <option>Feb</option>
+                              <option>Mar</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="sm:col-span-4">
+                          <label
+                            htmlFor="day"
+                            className="block text-sm font-medium leading-6 text-zinc-400"
+                          >
+                            Day
+                          </label>
+                          <div className="mt-2">
+                            <input
+                              id="day"
+                              name="day"
+                              type="number"
+                              required
+                              defaultValue="22"
+                              className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                            />
+                          </div>
+                        </div>
+                        <div className="sm:col-span-4">
+                          <label
+                            htmlFor="year"
+                            className="block text-sm font-medium leading-6 text-zinc-400"
+                          >
+                            Year
+                          </label>
+                          <div className="mt-2">
+                            <input
+                              id="year"
+                              name="year"
+                              type="number"
+                              required
+                              defaultValue="2002"
+                              className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                            />
+                          </div>
+                        </div>
+                        <div className="sm:col-span-12">
+                          <label
+                            htmlFor="email"
+                            className="block text-sm font-medium leading-6 text-zinc-400"
+                          >
+                            Gender
+                          </label>
+                          <div className="mt-2">
+                            <select
+                              id="location"
+                              name="location"
+                              className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 [&_*]:text-black"
+                              defaultValue="Male"
+                            >
+                              <option>Male</option>
+                              <option>Female</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-8 flex justify-end">
+                        <Form.LoadingButton className="rounded bg-indigo-500 px-5 py-2 text-sm font-medium text-white ">
+                          Next
+                        </Form.LoadingButton>
+                      </div>
+                    </Form>
+                  </motion.div>
+                )}
+
+                {/* Success Messages */}
                 {registrationStage == REGISTARTION_STAGES.SIGN_IN_SUCCESS && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{
+                      ...transition,
+                      duration: transition.duration / 2,
+                      delay: transition.duration / 2,
+                    }}
+                  >
+                    <p className="p-8 text-sm text-zinc-400">
+                      You are successfully logged in. Please wait you will be
+                      redirected soon.
+                    </p>
+                  </motion.div>
+                )}
+                {registrationStage == REGISTARTION_STAGES.SIGN_UP_SUCCESS && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{
+                      ...transition,
+                      duration: transition.duration / 2,
+                      delay: transition.duration / 2,
+                    }}
+                  >
+                    <p className="p-8 text-sm text-zinc-400">
+                      You are successfully signup. Please wait you will be
+                      redirected soon.
+                    </p>
+                  </motion.div>
+                )}
+                {registrationStage == REGISTARTION_STAGES.RECOVERY_SUCCESS && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -177,16 +416,21 @@ export default function Registration() {
 
 let formContext = createContext();
 
-function Form({ onSubmit, afterSave, children, ...props }) {
+function Form({ onSubmit, skipDelay = false, afterSave, children, ...props }) {
   let [status, setStatus] = useState("idle");
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setStatus("saving");
-    await onSubmit();
-    setStatus("success");
-    await delay(1250);
-    afterSave();
+
+    if (skipDelay) {
+      afterSave();
+    } else {
+      setStatus("saving");
+      await onSubmit();
+      setStatus("success");
+      await delay(1250);
+      afterSave();
+    }
   }
 
   return (
